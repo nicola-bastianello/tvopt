@@ -1,7 +1,7 @@
 # Welcome to **tvopt** [![Documentation Status](https://readthedocs.org/projects/tvopt/badge/?version=latest)](https://tvopt.readthedocs.io/en/latest/?badge=latest)
 [**Docs**](https://tvopt.readthedocs.io/en/latest/)
 | [**Installation**](#installation)
-| [**Cite**](#citing)
+| [**Cite**](#cite)
 
 **tvopt** is a prototyping and benchmarking Python framework for time-varying (or online) optimization. The framework is modular,
 and provides different tools for modeling dynamic optimization problems and to solve them with a wide range of well known
@@ -21,7 +21,7 @@ The documentation is available [here](https://tvopt.readthedocs.io/en/latest/).
 pip install tvopt
 ```
 
-## Citing **tvopt**
+## Cite
 
 ```
 @article{bastianello_tvopt_2020,
