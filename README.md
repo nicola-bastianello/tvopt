@@ -11,10 +11,7 @@ The documentation is available [here](https://tvopt.readthedocs.io/en/latest/).
  
 
 ## Installation
-**tvopt** works on Python 3.7 and depends on the following
-
-* numpy
-* scipy
+**tvopt** works on Python 3.7 and depends on: numpy, scipy.
 
 ### pip installation
 ```
@@ -25,13 +22,13 @@ pip install tvopt
 
 ```
 @article{bastianello_tvopt_2020,
-  title={tvopt: A Python Framework for Time-Varying Optimization},
-  author={Bastianello, Nicola},
-  journal={arXiv},
-  archivePrefix = {arXiv},
-  eprint = {todo arxiv num},
-  year={2020}
+	title = {tvopt: {A} {Python} {Framework} for {Time}-{Varying} {Optimization}},
+	url = {http://arxiv.org/abs/2011.07119},
+	journal = {arXiv:2011.07119 [cs, math]},
+	author = {Bastianello, Nicola},
+	year = {2020}
 }
+
 ```
 
 ## Author
