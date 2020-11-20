@@ -36,7 +36,7 @@ for i in range(n):
         x_gt[i,...] = 5*np.sin(np.arange(0, t_max, t_s)/10 + np.pi*ran.random())
 
 # ------ cost functions
-A = utils.positive_semidefinite_matrix(n) # observation matrix (static)
+A = utils.random_matrix((100-1)*ran.random(n)+1) # observation matrix (static)
 # noisy signal observations
 b = [A.dot(x_gt[...,[k]]) + ran.standard_normal((n,1)) for k in range(int(t_max/t_s))]
 # linear regression

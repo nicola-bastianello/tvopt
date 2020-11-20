@@ -203,7 +203,40 @@ def orthonormal_matrix(dim):
     
     return orth_mat
 
-def positive_semidefinite_matrix(dim, eigs=None):
+def random_matrix(eigs):
+    """
+    Generate a random matrix.
+    
+    The matrix is generated as
+    
+        .. math:: M = O \mathrm{diag}\{ \lambda_i \} O^\\top
+    
+    where :math:`O` is a random orthonormal matrix and :math:`\lambda_i` are
+    the specified eigenvalues.
+    
+    Parameters
+    ----------
+    eigs : array-like
+        The list of eigenvalues for the matrix.
+
+    Returns
+    -------
+    ndarray
+        The random positive semi-definite matrix.
+    
+    See Also
+    --------
+    orthonormal_matrix : Orthonormal matrix generator.
+    """
+    
+    eigs = np.ravel(eigs) # flatten eigs in an array
+
+    # generate an orthonormal matrix
+    orth_mat = orthonormal_matrix(eigs.size)
+    
+    return orth_mat.dot(np.diag(eigs).dot(orth_mat.T))
+
+def positive_semidefinite_matrix(dim, max_eig=None, min_eig=None):
     """
     Generate a random positive semi-definite matrix.
     
@@ -235,31 +268,23 @@ def positive_semidefinite_matrix(dim, eigs=None):
     
     See Also
     --------
-    orthonormal_matrix : Orthonormal matrix generator.
+    random_matrix : Random matrix generator.
     """
     
-    # check validity of dim and cast to integer
-    if int(dim) < 1:
-        raise ValueError("The dimension must be at least one.")
-    dim = int(dim)
+    max_eig = 1e2 if max_eig is None else max_eig
+    min_eig = 1e-2 if min_eig is None else min_eig
     
-    # check validity of eigenvalues (or generate them if not given)
-    if eigs is not None:
-        eigs = np.array(eigs).flatten()
-        if eigs.size < dim:
-            raise ValueError("Not enough eigenvalues.")
-        else:
-            eigs = eigs[:dim]
-        if np.any(eigs < 0):
-            raise ValueError("The eigenvalues must be non-negative.")
+    if max_eig < 0 or min_eig < 0:
+        raise ValueError("`max_eig` and `min_eig` must be non-negative.")
+    
+    if dim < 2:
+        eigs = [max_eig]
+    if dim < 3:
+        eigs = [max_eig, min_eig]
     else:
-        max_eig, min_eig = 1e2, 1e-2
-        eigs = (max_eig - min_eig)*ran.random(dim) + min_eig
-
-    # generate an orthonormal matrix
-    orth_mat = orthonormal_matrix(dim)
+        eigs = np.hstack((max_eig, (max_eig-min_eig)*ran.random(dim-2)+min_eig, min_eig))
     
-    return orth_mat.dot(np.diag(eigs).dot(orth_mat.T))
+    return random_matrix(eigs)
 
 def solve(a, b):
     
