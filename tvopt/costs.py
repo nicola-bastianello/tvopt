@@ -934,13 +934,15 @@ class AbsoluteValue(Cost):
     
     def function(self, x):
         
-        return self.weight*abs(x)
+        return self.weight*abs(float(x))
     
     def gradient(self, x):
         
-        return self.weight*math.copysign(1, x)
+        return self.weight*math.copysign(1, float(x))
     
     def proximal(self, x, penalty=1):
+        
+        x = float(x)
         
         return math.copysign(1, x)*max(abs(x) - self.weight*penalty, 0)
 
@@ -966,7 +968,7 @@ class Quadratic_1D(Cost):
     
     def gradient(self, x):
         
-        return self.a*x + self.b
+        return self.a*float(x) + self.b
     
     def hessian(self, x=None): # x argument is only for compatibility
         
@@ -974,7 +976,7 @@ class Quadratic_1D(Cost):
     
     def proximal(self, x, penalty=1):
         
-        return (x - penalty*self.b) / (1 + penalty*self.a)
+        return (float(x) - penalty*self.b) / (1 + penalty*self.a)
 
 class Huber_1D(Cost):
     r"""
@@ -995,6 +997,7 @@ class Huber_1D(Cost):
     
     def function(self, x):
         
+        x = float(x)
         n = abs(x)
         
         if n <= self.threshold: return x**2/2
@@ -1002,6 +1005,7 @@ class Huber_1D(Cost):
     
     def gradient(self, x):
         
+        x = float(x)
         n = utils.norm(x)
         
         if n <= self.threshold: return x
@@ -1014,6 +1018,7 @@ class Huber_1D(Cost):
     
     def proximal(self, x, penalty=1):
         
+        x = float(x)
         n = abs(x)
         
         if n <= self.threshold*(penalty+1): return x / (penalty+1)
@@ -1035,17 +1040,17 @@ class Logistic(Cost):
     
     def function(self, x):
 
-        return math.log(1 + math.exp(self.dom.check_input(x)))
+        return math.log(1 + math.exp(float(x)))
     
     def gradient(self, x):
         
-        x = self.dom.check_input(x)
+        x = float(x)
         
         return math.exp(x) / (1 + math.exp(x))
     
     def hessian(self, x):
         
-        x = self.dom.check_input(x)
+        x = float(x)
         
         return math.exp(x) / (1 + math.exp(x))**2
 
