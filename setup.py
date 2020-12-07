@@ -18,7 +18,9 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     install_requires=[
         'numpy>=1.19',
-        'scipy>=1.5'
+        'scipy>=1.5',
+        'sphinx',
+        'sphinx_rtd_theme'
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
