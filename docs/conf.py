@@ -22,7 +22,7 @@ copyright = '2020, Nicola Bastianello'
 author = 'Nicola Bastianello'
 
 # The full version, including alpha/beta/rc tags
-release = '0.1'
+release = '0.1.2'
 
 
 # -- General configuration ---------------------------------------------------
