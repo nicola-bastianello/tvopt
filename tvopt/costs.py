@@ -1143,7 +1143,7 @@ class Norm_inf(Cost):
         return self.weight*la.norm(self.dom.check_input(x), ord=np.inf)
     
     def proximal(self, x, penalty=1, tol=1e-5):
-        """
+        r"""
         Proximal evaluation of :math:`\ell_\infty` norm.
         
         See [1]__ for the formula.
@@ -1559,7 +1559,7 @@ def compute_proximal(f, x, penalty, solver=None, **kwargs):
     return y
 
 def backward_finite_difference(signal, t, order=1, step=1):
-    """
+    r"""
     Compute the backward finite difference of a signal.
     
     This function computes an approximate derivative of a given signal using
