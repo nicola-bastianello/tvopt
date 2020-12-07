@@ -692,7 +692,7 @@ def alternating_projections(sets, x, tol=1e-10, num_iter=10):
     Method of alternating projections.
     
     This function returns a point in the intersection of the given convex
-    sets, computed using the method of alternating projections (MAP) [1]__.
+    sets, computed using the method of alternating projections (MAP) [#]_.
 
     Parameters
     ----------
@@ -716,7 +716,7 @@ def alternating_projections(sets, x, tol=1e-10, num_iter=10):
     
     References
     ----------
-    .. [1] H. Bauschke and V. Koch, "Projection Methods: Swiss Army Knives for
+    .. [#] H. Bauschke and V. Koch, "Projection Methods: Swiss Army Knives for
            Solving Feasibility and Best Approximation Problems with 
            Halfspaces," in Contemporary Mathematics, vol. 636, S. Reich and 
            A. Zaslavski, Eds. Providence, Rhode Island: 

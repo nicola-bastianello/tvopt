@@ -172,8 +172,8 @@ def dpgm(problem, step, x_0=0, num_iter=100):
     r"""
     Distributed proximal gradient method (DPGM).
     
-    This function implements the DPGM algorithm proposed in [1]_ (see also 
-    [2]_ for the gradient-only version). The algorithm is characterized by 
+    This function implements the DPGM algorithm proposed in [#]_ (see also 
+    [#]_ for the gradient-only version). The algorithm is characterized by 
     the following updates
     
     .. math:: \begin{align}
@@ -208,10 +208,10 @@ def dpgm(problem, step, x_0=0, num_iter=100):
     
     References
     ----------
-    .. [1] Bastianello, N., Ajalloeian, A., & Dall'Anese, E. (2020). 
+    .. [#] Bastianello, N., Ajalloeian, A., & Dall'Anese, E. (2020). 
            Distributed and Inexact Proximal Gradient Method for Online Convex 
            Optimization. arXiv preprint arXiv:2001.00870.
-    .. [2] Yuan, K., Ling, Q., & Yin, W. (2016). On the convergence of 
+    .. [#] Yuan, K., Ling, Q., & Yin, W. (2016). On the convergence of 
            decentralized gradient descent. SIAM Journal on Optimization, 
            26(3), 1835-1854.
     """
@@ -240,8 +240,8 @@ def pg_extra(problem, step, x_0=0, num_iter=100):
     r"""
     Proximal gradient exact first-order algorithm (PG-EXTRA).
     
-    This function implements the PG-EXTRA algorithm proposed in [1]_ (see also 
-    [2]_ for the gradient-only version, EXTRA). The algorithm is characterized 
+    This function implements the PG-EXTRA algorithm proposed in [#]_ (see also 
+    [#]_ for the gradient-only version, EXTRA). The algorithm is characterized 
     by the following updates
     
     .. math:: \begin{align}
@@ -279,10 +279,10 @@ def pg_extra(problem, step, x_0=0, num_iter=100):
     
     References
     ----------
-    .. [1] Shi, W., Ling, Q., Wu, G., & Yin, W. (2015). A proximal gradient 
+    .. [#] Shi, W., Ling, Q., Wu, G., & Yin, W. (2015). A proximal gradient 
             algorithm for decentralized composite optimization. IEEE 
             Transactions on Signal Processing, 63(22), 6013-6023.
-    .. [2] Shi, W., Ling, Q., Wu, G., & Yin, W. (2015). Extra: An exact 
+    .. [#] Shi, W., Ling, Q., Wu, G., & Yin, W. (2015). Extra: An exact 
             first-order algorithm for decentralized consensus optimization. 
             SIAM Journal on Optimization, 25(2), 944-966.
     """
@@ -328,7 +328,7 @@ def nids(problem, step, x_0=0, num_iter=100):
     r"""
     Network InDependent Step-size algorithm (NIDS).
     
-    This function implements the NIDS algorithm proposed in [1]_. The algorithm
+    This function implements the NIDS algorithm proposed in [#]_. The algorithm
     is characterized by the following updates
     
     .. math:: \begin{align}
@@ -372,7 +372,7 @@ def nids(problem, step, x_0=0, num_iter=100):
     
     References
     ----------
-    .. [1] Li, Z., Shi, W., & Yan, M. (2019). A decentralized proximal-gradient
+    .. [#] Li, Z., Shi, W., & Yan, M. (2019). A decentralized proximal-gradient
             method with network independent step-sizes and separated convergence
             rates. IEEE Transactions on Signal Processing, 67(17), 4494-4506.
     """
@@ -423,7 +423,7 @@ def prox_ed(problem, step, x_0=0, num_iter=100):
     r"""
     Proximal exact diffusion (Prox-ED).
     
-    This function implements the Prox-ED algorithm [1]_. The algorithm is 
+    This function implements the Prox-ED algorithm [#]_. The algorithm is 
     characterized by the following updates
     
     .. math:: \begin{align}
@@ -461,7 +461,7 @@ def prox_ed(problem, step, x_0=0, num_iter=100):
     
     References
     ----------
-    .. [1] S. A. Alghunaim, E. Ryu, K. Yuan, and A. H. Sayed, "Decentralized 
+    .. [#] S. A. Alghunaim, E. Ryu, K. Yuan, and A. H. Sayed, "Decentralized 
            Proximal Gradient Algorithms with Linear Convergence Rates," IEEE 
            Transactions on Automatic Control, 2020.
     """
@@ -511,7 +511,7 @@ def aug_dgm(problem, step, x_0=0, num_iter=100):
     r"""
     Augmented distributed gradient method (Aug-DGM).
     
-    This function implements the Aug-DGM algorithm (see [1]_). The algorithm is
+    This function implements the Aug-DGM algorithm (see [#]_). The algorithm is
     characterized by the following updates
     
     .. math:: \begin{align}
@@ -546,7 +546,7 @@ def aug_dgm(problem, step, x_0=0, num_iter=100):
     
     References
     ----------
-    .. [1] J. Xu, S. Zhu, Y. C. Soh, and L. Xie, "Augmented distributed 
+    .. [#] J. Xu, S. Zhu, Y. C. Soh, and L. Xie, "Augmented distributed 
            gradient methods for multi-agent optimization under uncoordinated 
            constant stepsizes," in 2015 54th IEEE Conference on Decision and 
            Control (CDC), Osaka, Japan, Dec. 2015, pp. 2055–2060.
@@ -589,7 +589,7 @@ def dual_ascent(problem, step, w_0=0, num_iter=100):
     r"""
     Distributed dual ascent a.k.a. dual decomposition (DD).
     
-    This function implements the DD algorithm [1]_. The algorithm is 
+    This function implements the DD algorithm [#]_. The algorithm is 
     characterized by the following updates
     
     .. math:: \pmb{x}^\ell = \operatorname{arg\,min}_{\pmb{x}} \left\{
@@ -626,7 +626,7 @@ def dual_ascent(problem, step, w_0=0, num_iter=100):
     
     References
     ----------
-    .. [1] Simonetto, A. (2018). Dual Prediction–Correction Methods for
+    .. [#] Simonetto, A. (2018). Dual Prediction–Correction Methods for
             Linearly Constrained Time-Varying Convex Programs. IEEE Transactions
             on Automatic Control, 64(8), 3355-3361.
     """
@@ -661,7 +661,7 @@ def admm(problem, penalty, rel, w_0=0, num_iter=100):
     r"""
     Distributed relaxed alternating direction method of multipliers (ADMM).
     
-    This function implements the distributed ADMM, see [1]_ and references 
+    This function implements the distributed ADMM, see [#]_ and references 
     therein. The algorithm is characterized by the following updates
     
     .. math:: x_i^\ell = \operatorname{prox}_{f_i / (\rho d_i)}
@@ -703,7 +703,7 @@ def admm(problem, penalty, rel, w_0=0, num_iter=100):
     
     References
     ----------
-    .. [1] N. Bastianello, R. Carli, L. Schenato, and M. Todescato, 
+    .. [#] N. Bastianello, R. Carli, L. Schenato, and M. Todescato, 
            "Asynchronous Distributed Optimization over Lossy Networks via 
            Relaxed ADMM: Stability and Linear Convergence," IEEE Transactions 
            on Automatic Control.

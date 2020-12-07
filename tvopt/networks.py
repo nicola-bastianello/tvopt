@@ -196,7 +196,7 @@ class Network():
         
         This method implements a step of max-consensus, where each node selects
         the (element-wise) maximum between the packets received from its 
-        neighbors and its own state. See [1]__ for a reference on 
+        neighbors and its own state. See [#]_ for a reference on 
         max-consensus.
 
         Parameters
@@ -212,7 +212,7 @@ class Network():
         
         References
         ----------
-        .. [1] F. Iutzeler, P. Ciblat, and J. Jakubowicz, "Analysis of 
+        .. [#] F. Iutzeler, P. Ciblat, and J. Jakubowicz, "Analysis of 
                Max-Consensus Algorithms in Wireless Channels," IEEE 
                Transactions on Signal Processing, vol. 60, no. 11, pp. 
                6103–6107, Nov. 2012.

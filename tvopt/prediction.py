@@ -71,7 +71,7 @@ class ExtrapolationPrediction(Prediction):
     r"""
     Extrapolation-based prediction.
     
-    This prediction strategy, proposed in [1]__, predicts the cost at time
+    This prediction strategy, proposed in [#]_, predicts the cost at time
     :math:`t_{k+1}` as:
     
         .. math:: \hat{f}(\pmb{x};t_{k+1}) = \sum_{i = 1}^I \ell_i f(\pmb{x}; t_{k - i + 1})
@@ -81,7 +81,7 @@ class ExtrapolationPrediction(Prediction):
         
         .. math:: \ell_i = \prod_{1 \leq j \leq I, \ j \neq i} \frac{j}{j - i}.
         
-    .. [1] N. Bastianello, A. Simonetto, and R. Carli, "Primal and Dual 
+    .. [#] N. Bastianello, A. Simonetto, and R. Carli, "Primal and Dual 
            Prediction-Correction Methods for Time-Varying Convex Optimization,"
            arXiv:2004.11709 [cs, math], Oct. 2020. Available:
            http://arxiv.org/abs/2004.11709.
@@ -110,7 +110,7 @@ class TaylorPrediction(Prediction):
     r"""
     Taylor expansion-based prediction.
     
-    This prediction strategy, proposed in [1]__ and see also [2]__, predicts 
+    This prediction strategy, proposed in [#]_ and see also [#]_, predicts 
     the cost at time :math:`t_{k+1}` using its Taylor expansion around 
     :math:`t_k` and a given :math:`\pmb{x}_k`:
         
@@ -125,11 +125,11 @@ class TaylorPrediction(Prediction):
     
     References
     ----------
-    .. [1] A. Simonetto, A. Mokhtari, A. Koppel, G. Leus, and A. Ribeiro, 
+    .. [#] A. Simonetto, A. Mokhtari, A. Koppel, G. Leus, and A. Ribeiro, 
            "A Class of Prediction-Correction Methods for Time-Varying 
            Convex Optimization," IEEE Transactions on Signal Processing, 
            vol. 64, no. 17, pp. 4576–4591, Sep. 2016.
-    .. [2] N. Bastianello, A. Simonetto, and R. Carli, "Primal and Dual 
+    .. [#] N. Bastianello, A. Simonetto, and R. Carli, "Primal and Dual 
            Prediction-Correction Methods for Time-Varying Convex Optimization,"
            arXiv:2004.11709 [cs, math], Oct. 2020. Available:
            http://arxiv.org/abs/2004.11709.

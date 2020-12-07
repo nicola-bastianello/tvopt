@@ -1146,11 +1146,11 @@ class Norm_inf(Cost):
         r"""
         Proximal evaluation of :math:`\ell_\infty` norm.
         
-        See [1]__ for the formula.
+        See [#]_ for the formula.
         
         References
         ----------
-        .. [1] A. Beck, First-Order Methods in Optimization. Philadelphia, PA: 
+        .. [#] A. Beck, First-Order Methods in Optimization. Philadelphia, PA: 
             Society for Industrial and Applied Mathematics, 2017.
         """
         
@@ -1409,14 +1409,14 @@ class DynamicExample_1D(Cost):
     r"""
     Scalar benchmark dynamic cost.
     
-    The dynamic cost was propposed in [1]__ and is defined as:
+    The dynamic cost was propposed in [#]_ and is defined as:
     
         .. math:: f(x; t) = \frac{1}{2} (x - \cos(\omega t))^2 + \kappa \log(1 + \exp(\mu x))
     
     with default parameters :math:`\omega = 0.02 \pi`, :math:`\kappa = 7.5`
     and :math:`\mu = 1.75`.
     
-    .. [1] A. Simonetto, A. Mokhtari, A. Koppel, G. Leus, and A. Ribeiro, 
+    .. [#] A. Simonetto, A. Mokhtari, A. Koppel, G. Leus, and A. Ribeiro, 
            "A Class of Prediction-Correction Methods for Time-Varying 
            Convex Optimization," IEEE Transactions on Signal Processing, 
            vol. 64, no. 17, pp. 4576–4591, Sep. 2016.
@@ -1458,13 +1458,13 @@ class DynamicExample_2D(Cost):
     r"""
     Bi-dimensional benchmark dynamic cost.
     
-    The dynamic cost was propposed in [1]__ and is defined as:
+    The dynamic cost was proposed in [#]_ and is defined as:
     
         .. math:: f(\pmb{x}; t) = \frac{1}{2} (x_1 - \exp(\cos(t)))^2 + \frac{1}{2} (x_2 - x_1 \tanh(t))^2
     
     where we used the notation :math:`\pmb{x} = [x_1, x_2]^\top`.
     
-    .. [1] Y. Zhang, Z. Qi, B. Qiu, M. Yang, and M. Xiao, "Zeroing Neural 
+    .. [#] Y. Zhang, Z. Qi, B. Qiu, M. Yang, and M. Xiao, "Zeroing Neural 
            Dynamics and Models for Various Time-Varying Problems Solving 
            with ZLSF Models as Minimization-Type and Euler-Type Special 
            Cases [Research Frontier]," IEEE Computational Intelligence 
@@ -1568,7 +1568,7 @@ def backward_finite_difference(signal, t, order=1, step=1):
         .. math:: s^o(t) = \sum_{i = 0}^o (-1)^i {o \choose i} s(t - i T_s) / T_s^o
     
     where :math:`o \in \mathbb{N}` is the derivative order and :math:`T_s` is 
-    the sampling time, see [1]__ for more details.
+    the sampling time, see [#]_ for more details.
     
     Notice that if samples before :math:`t = 0` are required, they are set to 
     zero.
@@ -1596,7 +1596,7 @@ def backward_finite_difference(signal, t, order=1, step=1):
     
     References
     ----------
-    .. [1] A. Quarteroni, R. Sacco, and F. Saleri, Numerical mathematics, 2nd 
+    .. [#] A. Quarteroni, R. Sacco, and F. Saleri, Numerical mathematics, 2nd 
            ed. Berlin; New York: Springer, 2007.
     """
         
