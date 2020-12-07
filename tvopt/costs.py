@@ -150,7 +150,7 @@ class Cost():
         raise NotImplementedError()
     
     def proximal(self, x, *args, penalty=1, **kwargs):
-        """
+        r"""
         An evaluation of the cost's proximal.
         
         If this method is not overwritten, the default behavior is to 
