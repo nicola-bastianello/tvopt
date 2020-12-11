@@ -120,6 +120,11 @@ class Set():
     def __add__(self, other):
         
         return IntersectionSet(self, other)
+    
+    def __radd__(self, other):
+        
+        if other == 0: return self
+        else: return self.__add__(other)
 
 
 # -------- CLASSES for OPERATIONS
