@@ -1,9 +1,10 @@
 ![banner](https://github.com/nicola-bastianello/tvopt/blob/main/social_preview.png)
 
-# Welcome to **tvopt** [![Documentation Status](https://readthedocs.org/projects/tvopt/badge/?version=latest)](https://tvopt.readthedocs.io/en/latest/?badge=latest)
+# Welcome to **tvopt** [![Documentation Status](https://readthedocs.org/projects/tvopt/badge/?version=latest)](https://tvopt.readthedocs.io/en/latest/?badge=latest) [![This Repository uses a generated Social Preview from @pqt/social-preview](https://img.shields.io/badge/%E2%9C%93-Social%20Preview-blue)](https://github.com/pqt/social-preview)
 [**Docs**](https://tvopt.readthedocs.io/en/latest/)
 | [**Installation**](#installation)
 | [**Cite**](#cite)
+
 
 **tvopt** is a prototyping and benchmarking Python framework for time-varying (or online) optimization. The framework is modular,
 and provides different tools for modeling dynamic optimization problems and to solve them with a wide range of well known
@@ -36,6 +37,3 @@ pip install tvopt
 ## Author
 **tvopt** is developed by
 [Nicola Bastianello](https://nicola-bastianello.github.io)
-
-
-[![This Repository uses a generated Social Preview from @pqt/social-preview](https://img.shields.io/badge/%E2%9C%93-Social%20Preview-blue)](https://github.com/pqt/social-preview)
