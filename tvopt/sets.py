@@ -257,7 +257,7 @@ class IntersectionSet(Set):
         Projection onto the intersection.
         
         This method returns an approximate projection onto the intersection of
-        sets, computed using the method of alteranting projections.
+        sets, computed using the method of alternating projections.
 
         See Also
         --------
