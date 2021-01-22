@@ -10,6 +10,9 @@ Welcome to tvopt's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+.. automodule:: tvopt
+   :members:
+
 
 
 Indices and tables
