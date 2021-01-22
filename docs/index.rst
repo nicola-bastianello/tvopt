@@ -10,7 +10,7 @@ Welcome to tvopt's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-.. automodule:: tvopt.tvopt
+.. automodule:: tvopt
    :members:
 
 
