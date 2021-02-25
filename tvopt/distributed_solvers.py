@@ -7,9 +7,7 @@ Distributed solvers.
 
 
 import numpy as np
-from numpy.random import default_rng
-
-ran = default_rng() # random generator
+ran = np.random.default_rng() # random generator
 
 from tvopt import costs, solvers
 
@@ -355,7 +353,7 @@ def nids(problem, step, x_0=0, num_iter=100):
         and the costs describing the (possibly composite) problem. The 
         dictionary should contain :math:`f` and the network, and optionally
         :math:`g`.
-    step : float
+    step : float or list
         A common step-size or a list of local step-sizes, one for each node.
     x_0 : ndarray, optional
         The initial states of the nodes. This can be either an ndarray
@@ -501,6 +499,89 @@ def prox_ed(problem, step, x_0=0, num_iter=100):
         # proximal step
         if is_composite: x = g.proximal(z, penalty=step)
         else: x = z
+    
+    return x
+
+def prox_aac(problem, step, x_0=0, num_iter=100, consensus_steps=[True, True]):
+    r"""
+    Proximal adapt-and-combine (Prox-AAC).
+    
+    This function implements the Prox-AAC algorithm (see [1]_ for the gradient
+    only version). The algorithm is characterized by the 
+    following updates
+    
+    .. math:: \pmb{z}^\ell = \pmb{W}_1 \pmb{x}^\ell
+    
+    .. math:: \pmb{y}^\ell = 
+                    \pmb{z}^\ell - \alpha \nabla f(\pmb{z}^\ell)
+
+    .. math:: \pmb{x}^{\ell+1} = 
+                      \operatorname{prox}_{\alpha g}(\pmb{W}_2 \pmb{y}^\ell)
+    
+    for :math:`\ell = 0, 1, \ldots`, where :math:`\pmb{W}_1` and
+    :math:`\pmb{W}_2` are doubly stochastic matrices (or the identity). 
+    
+    Parameters
+    ----------
+    problem : dict
+        A dictionary containing the network describing the multi-agent system
+        and the costs describing the (possibly composite) problem. The 
+        dictionary should contain :math:`f` and the network, and optionally
+        :math:`g`.
+    step : float or list
+        A common step-size or a list of local step-sizes, one for each node.
+    x_0 : ndarray, optional
+        The initial states of the nodes. This can be either an ndarray
+        of suitable size with the last dimension indexing the nodes, or
+        a scalar. If it is a scalar then the same initial value is used for
+        all components of the states.
+    num_iter : int, optional
+        The number of iterations to be performed.
+    consensus_steps : list
+        A list specifying which consensus steps to perform; the list must have
+        two elements that can be interpreted as bools.
+    
+    Returns
+    -------
+    x : ndarray
+        The nodes' states after `num_iter` iterations.
+    
+    References
+    ----------
+    .. [1] Chen, J., & Sayed, A. H. (2013). Distributed Pareto optimization via
+            diffusion strategies. IEEE Journal of Selected Topics in Signal 
+            Processing, 7(2), 205-220.
+    """    
+    
+    # unpack problem data
+    f, g, net = problem["f"], problem.get("g", None), problem["network"]
+    is_composite = g is not None
+    
+    x = np.zeros(f.dom.shape)
+    x[...] = x_0
+    
+    # uncoordinated step-sizes
+    step = step if isinstance(step, list) else [step for _ in range(net.N)]
+    
+    
+    # run algorithm
+    for l in range(num_iter):
+        
+        # first communication step
+        if consensus_steps[0]: z = net.consensus(x[...,l])
+        else: z = x
+        
+        # gradient step
+        grad = f.gradient(z)
+        y = z - np.stack([step[i]*grad[...,i] for i in range(net.N)], axis=-1)
+
+        # second communication step
+        if consensus_steps[1]: u = net.consensus(y)
+        else: u = y
+        
+        # proximal step
+        if is_composite: x = g.proximal(u, penalty=step)
+        else: x = u
     
     return x
 

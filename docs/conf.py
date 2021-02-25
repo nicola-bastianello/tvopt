@@ -22,7 +22,7 @@ copyright = '2021, Nicola Bastianello'
 author = 'Nicola Bastianello'
 
 # The full version, including alpha/beta/rc tags
-release = '0.1.3'
+release = '0.1.4'
 
 
 # -- General configuration ---------------------------------------------------
@@ -31,6 +31,7 @@ release = '0.1.3'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ['sphinx.ext.autodoc',
+              'sphinx.ext.autosummary',
               'sphinx.ext.napoleon',
               'sphinx.ext.mathjax',
 ]

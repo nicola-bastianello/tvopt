@@ -10,8 +10,19 @@ Welcome to tvopt's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-.. automodule:: tvopt
-   :members:
+Modules
+=======
+
+.. autosummary::
+   :toctree: modules
+
+   tvopt.costs
+   tvopt.distributed_solvers
+   tvopt.networks
+   tvopt.prediction
+   tvopt.sets
+   tvopt.solvers
+   tvopt.utils
 
 
 
