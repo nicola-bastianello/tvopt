@@ -11,10 +11,9 @@ import math
 import numbers
 import numpy as np
 from numpy import linalg as la
-from numpy.random import default_rng
 from scipy.linalg import block_diag
 
-ran = default_rng() # random generator
+ran = np.random.default_rng() # random generator
 
 
 #%% LINEAR ALGEBRA

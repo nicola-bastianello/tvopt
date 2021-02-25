@@ -7,11 +7,10 @@ Network tools.
 
 import math
 import numpy as np
-from numpy.random import default_rng
 from numpy import linalg as la
 from functools import partialmethod
 
-ran = default_rng() # random generator
+ran = np.random.default_rng() # random generator
 
 from tvopt import sets, utils
 
