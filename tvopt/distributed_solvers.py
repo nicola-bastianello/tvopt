@@ -568,7 +568,7 @@ def prox_aac(problem, step, x_0=0, num_iter=100, consensus_steps=[True, True]):
     for l in range(num_iter):
         
         # first communication step
-        if consensus_steps[0]: z = net.consensus(x[...,l])
+        if consensus_steps[0]: z = net.consensus(x)
         else: z = x
         
         # gradient step
