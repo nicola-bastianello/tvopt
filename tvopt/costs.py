@@ -1477,11 +1477,14 @@ class DynamicExample_2D(Cost):
         self.smooth = 2
     
     def function(self, x, t):
+        
+        x = x.flatten()
                 
         return 0.5*(x[0] - math.exp(math.cos(t)))**2 + 0.5*(x[1] - x[0]*math.tanh(t))**2
     
     def gradient(self, x, t):
-               
+        
+        x = x.flatten()
         th = math.tanh(t)
         
         return np.array([[x[0] - math.exp(math.cos(t)) - th*(x[1] - x[0]*th)],
@@ -1500,6 +1503,7 @@ class DynamicExample_2D(Cost):
                 
         # time der. gradient
         if der == "tx" or der == 'xt':
+            x = x.flatten()
             return np.array([[math.exp(math.cos(t))*math.sin(t) - (x[1] - 2*x[0]*math.tanh(t))/math.cosh(t)**2], 
                              [-x[0]/math.cosh(t)**2]]).reshape((-1,1))
         else:

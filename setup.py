@@ -7,8 +7,8 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="tvopt", # Replace with your own username
-    version="0.1.5",
+    name="tvopt",
+    version="0.1.6",
     author="Nicola Bastianello",
     author_email="nicola.bastianello.3@phd.unipd.it",
     description="tvopt: A Python Framework for Time-Varying Optimization",
