@@ -8,7 +8,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="tvopt",
-    version="0.1.6",
+    version="0.1.7",
     author="Nicola Bastianello",
     author_email="nicola.bastianello.3@phd.unipd.it",
     description="tvopt: A Python Framework for Time-Varying Optimization",

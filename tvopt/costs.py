@@ -1346,6 +1346,9 @@ class LinearRegression(Cost):
         
         if np.size(A) == 1: return Quadratic_1D(A**2, -A*b, 0.5*b**2)
         else: return Quadratic(A.T.dot(A), -A.T.dot(b), 0.5*b.T.dot(b))
+    
+    def __getnewargs__(self):
+        return self.A, self.b
 
 class RobustLinearRegression(Cost):
     r"""
