@@ -502,7 +502,7 @@ def prox_ed(problem, step, x_0=0, num_iter=100):
     
     return x
 
-def prox_aac(problem, step, x_0=0, num_iter=100, consensus_steps=[True, True]):
+def prox_aac(problem, step, x_0=0, num_iter=100, consensus_steps=[True, True, True]):
     r"""
     Proximal adapt-and-combine (Prox-AAC).
     
@@ -516,10 +516,10 @@ def prox_aac(problem, step, x_0=0, num_iter=100, consensus_steps=[True, True]):
                     \pmb{z}^\ell - \alpha \nabla f(\pmb{z}^\ell)
 
     .. math:: \pmb{x}^{\ell+1} = 
-                      \operatorname{prox}_{\alpha g}(\pmb{W}_2 \pmb{y}^\ell)
+                      \pmb{W}_3 \operatorname{prox}_{\alpha g}(\pmb{W}_2 \pmb{y}^\ell)
     
-    for :math:`\ell = 0, 1, \ldots`, where :math:`\pmb{W}_1` and
-    :math:`\pmb{W}_2` are doubly stochastic matrices (or the identity). 
+    for :math:`\ell = 0, 1, \ldots`, where :math:`\pmb{W}_1`, :math:`\pmb{W}_2`
+    and :math:`\pmb{W}_3` are doubly stochastic matrices (or the identity).
     
     Parameters
     ----------
@@ -539,7 +539,7 @@ def prox_aac(problem, step, x_0=0, num_iter=100, consensus_steps=[True, True]):
         The number of iterations to be performed.
     consensus_steps : list
         A list specifying which consensus steps to perform; the list must have
-        two elements that can be interpreted as bools.
+        three elements that can be interpreted as bools.
     
     Returns
     -------
@@ -551,7 +551,7 @@ def prox_aac(problem, step, x_0=0, num_iter=100, consensus_steps=[True, True]):
     .. [1] Chen, J., & Sayed, A. H. (2013). Distributed Pareto optimization via
             diffusion strategies. IEEE Journal of Selected Topics in Signal 
             Processing, 7(2), 205-220.
-    """    
+    """
     
     # unpack problem data
     f, g, net = problem["f"], problem.get("g", None), problem["network"]
@@ -582,6 +582,10 @@ def prox_aac(problem, step, x_0=0, num_iter=100, consensus_steps=[True, True]):
         # proximal step
         if is_composite: x = g.proximal(u, penalty=step)
         else: x = u
+        
+        # third communication step
+        if consensus_steps[2]: x = net.consensus(x)
+        
     
     return x
 
