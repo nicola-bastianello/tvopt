@@ -6,6 +6,8 @@ Cost prediction tools.
 """
 
 import numpy as np
+import scipy as sp
+
 
 from tvopt import costs
 
@@ -94,7 +96,7 @@ class ExtrapolationPrediction(Prediction):
         
         # extrapolation data
         self.order, self.range = order, list(range(1, order+1))
-        self.coeffs = {i : np.prod([j / (j - i) for j in self.range[:i-1] + self.range[i:]]) for i in self.range}
+        self.coeffs = {i : (-1)**(i-1) * sp.special.comb(self.order, i) for i in self.range}
     
     def update(self, t):
         
