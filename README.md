@@ -36,4 +36,4 @@ pip install tvopt
 
 ## Author
 **tvopt** is developed by
-[Nicola Bastianello](https://nicola-bastianello.github.io)
+[Nicola Bastianello](https://nicola-bastianello.it)
