@@ -269,6 +269,10 @@ class IntersectionSet(Set):
 
 #%% EXAMPLES
 
+# machine precision for more realistic `contains` checks
+_eps = np.finfo(float).eps
+
+
 class R(Set):
     r"""
     The underlying space.
@@ -313,7 +317,7 @@ class NonnegativeOrthant(Set):
     
     def contains(self, x):
         
-        return np.all(self.check_input(x) >= 0)
+        return np.all(self.check_input(x) >= _eps)
     
     def projection(self, x):
         
@@ -360,7 +364,7 @@ class Ball(Set):
         
         x = self.check_input(x)
         
-        return utils.norm(x - self.center) <= self.radius
+        return abs(utils.norm(x - self.center) - self.radius) <= _eps
     
     def projection(self, x):
         
@@ -423,7 +427,7 @@ class Box(Set):
         
         x = self.check_input(x)
         
-        return np.all(self.l <= x) and np.all(x <= self.u)
+        return np.all(self.l-_eps <= x) and np.all(x <= self.u+_eps)
     
     def projection(self, x):
         
@@ -485,7 +489,7 @@ class AffineSet(Set):
         
         x = self.check_input(x)
         
-        return all(self.A.dot(x) == self.b)
+        return all(abs(self.A.dot(x) - self.b) <= _eps)
     
     def projection(self, x):
         
@@ -545,7 +549,7 @@ class Halfspace(Set):
         
         x = self.check_input(x)
         
-        return (self.a.T.dot(x) - self.b).item() <= 0
+        return (self.a.T.dot(x) - self.b).item() <= _eps
     
     def projection(self, x):
         
@@ -592,7 +596,7 @@ class Ball_l1(Set):
         
         x = self.check_input(x)
         
-        return la.norm(x - self.center, ord=1) <= self.radius
+        return abs(la.norm(x - self.center, ord=1) - self.radius) <= _eps
     
     def projection(self, x, tol=1e-5):
         
@@ -701,10 +705,10 @@ def alternating_projections(sets, x, tol=1e-10, num_iter=10):
 
     Parameters
     ----------
-    x : array_like
-        The starting point.
     sets : list
         The list of sets.
+    x : array_like
+        The starting point.
     tol : float, optional
         The stopping condition. If the difference between consecutive iterates
         is smaller than or equal to `tol`, then the function returns. 

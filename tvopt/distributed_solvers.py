@@ -40,7 +40,7 @@ def average_consensus(net, x_0, num_iter=100):
     x = x_0
 
     
-    for l in range(num_iter): x = net.consensus(x)
+    for l in range(int(num_iter)): x = net.consensus(x)
     
     return x
 
@@ -71,7 +71,7 @@ def ratio_consensus(net, x_0, num_iter=100):
     y, z = x, np.ones(x_0.shape) # auxiliary variables
     
     
-    for l in range(num_iter):
+    for l in range(int(num_iter)):
         
         y_old, z_old = np.copy(y), np.copy(z)
         y[...], z[...] = 0, 0
@@ -119,7 +119,7 @@ def gossip_consensus(net, x_0, num_iter=100, q=0.5):
     x = x_0
     
     
-    for l in range(num_iter):
+    for l in range(int(num_iter)):
                 
         # choose nodes for gossip communication
         i = ran.integers(0, net.N)
@@ -159,7 +159,7 @@ def max_consensus(net, x_0, num_iter=100):
     x = x_0
     
     
-    for l in range(num_iter): x = net.max_consensus(x)
+    for l in range(int(num_iter)): x = net.max_consensus(x)
     
     return x
 
@@ -223,7 +223,7 @@ def dpgm(problem, step, x_0=0, num_iter=100):
     
     
     # run algorithm
-    for l in range(num_iter):
+    for l in range(int(num_iter)):
         
         # gradient step
         y = net.consensus(x, net.weights) - step*f.gradient(x)
@@ -303,7 +303,7 @@ def pg_extra(problem, step, x_0=0, num_iter=100):
     
     
     # run algorithm
-    for l in range(1,num_iter):
+    for l in range(1,int(num_iter)):
         
         # store old consensus step and gradient evaluation
         x_cons_old, grad_old = np.copy(x_cons), np.copy(grad)
@@ -400,7 +400,7 @@ def nids(problem, step, x_0=0, num_iter=100):
     
     
     # run algorithm
-    for l in range(1,num_iter):
+    for l in range(1,int(num_iter)):
         
         # store old gradient and compute new one
         grad_old = np.copy(grad)
@@ -484,7 +484,7 @@ def prox_ed(problem, step, x_0=0, num_iter=100):
     
     
     # run algorithm
-    for l in range(1,num_iter):
+    for l in range(1,int(num_iter)):
         
         # store old y variables
         y_old = np.copy(y)
@@ -565,7 +565,7 @@ def prox_aac(problem, step, x_0=0, num_iter=100, consensus_steps=[True, True, Tr
     
     
     # run algorithm
-    for l in range(num_iter):
+    for l in range(int(num_iter)):
         
         # first communication step
         if consensus_steps[0]: z = net.consensus(x)
@@ -654,7 +654,7 @@ def aug_dgm(problem, step, x_0=0, num_iter=100):
     
     
     # run algorithm
-    for l in range(1,num_iter):
+    for l in range(1,int(num_iter)):
         
         # old and new gradient evaluations
         grad_old = np.copy(grad)
@@ -725,7 +725,7 @@ def dual_ascent(problem, step, w_0=0, num_iter=100):
 
     
     # run algorithm
-    for l in range(num_iter):
+    for l in range(int(num_iter)):
         
         # dual communication step
         w_comm = w - net.consensus(w, net.weights)
@@ -809,7 +809,7 @@ def admm(problem, penalty, rel, w_0=0, num_iter=100):
             z[i,j] = np.zeros(f.dom.shape[:-1])
     
     
-    for l in range(num_iter):
+    for l in range(int(num_iter)):
         
         for i in range(net.N):
             

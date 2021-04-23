@@ -49,7 +49,7 @@ def subgradient(problem, x_0=0, num_iter=100, tol=None):
     x[...] = x_0
     
     
-    for l in range(num_iter):
+    for l in range(int(num_iter)):
         
         x_old = x
         
@@ -100,7 +100,7 @@ def gradient(problem, step, x_0=0, num_iter=100, tol=None):
     x[...] = x_0
     
     
-    for l in range(num_iter):
+    for l in range(int(num_iter)):
         
         x_old = x
         
@@ -163,7 +163,7 @@ def backtracking_gradient(problem, r=0.2, c=0.5, x_0=0, num_iter=100, tol=None):
     x[...] = x_0
     
     
-    for l in range(num_iter):
+    for l in range(int(num_iter)):
         
         # candidate descent direction
         grad = f.gradient(x)
@@ -225,7 +225,7 @@ def ppa(problem, penalty, x_0=0, num_iter=100, tol=None):
     x[...] = x_0
     
     
-    for l in range(num_iter):
+    for l in range(int(num_iter)):
         
         # proximal step
         x_old = x
@@ -284,7 +284,7 @@ def fbs(problem, step, rel=1, x_0=0, num_iter=100, tol=None):
     x[...] = x_0
     
     
-    for l in range(num_iter):
+    for l in range(int(num_iter)):
         
         x_old = x
         
@@ -344,7 +344,7 @@ def prs(problem, penalty, rel=1, x_0=0, num_iter=100, tol=None):
     z[...] = x_0
     
     
-    for l in range(num_iter):
+    for l in range(int(num_iter)):
         
         z_old = z
         
@@ -413,7 +413,7 @@ def newton(problem, r=0.2, c=0.5, x_0=0, num_iter=100, tol=None):
     x[...] = x_0
     
     
-    for l in range(num_iter):
+    for l in range(int(num_iter)):
         
         # candidate descent direction
         grad, hess = f.gradient(x), f.hessian(x)
@@ -491,7 +491,7 @@ def dual_ascent(problem, penalty, w_0=0, num_iter=100, tol=None):
     p = costs.Linear(- A.T.dot(w))
     
     
-    for l in range(num_iter):
+    for l in range(int(num_iter)):
                
         # primal update
         x = newton({"f":f+p}, x_0=x, tol=1e-5)
@@ -562,7 +562,7 @@ def mm(problem, penalty, w_0=0, num_iter=100, tol=None):
     p = costs.Quadratic(penalty*A.T.dot(A), -penalty*A.T.dot(c + w/penalty))
     
     
-    for l in range(num_iter):
+    for l in range(int(num_iter)):
                 
         # primal update
         x = newton({"f":f+p}, x_0=x, tol=1e-5)
@@ -644,7 +644,7 @@ def dual_fbs(problem, penalty, rel=1, w_0=0, num_iter=100, tol=None):
     p_y = costs.Quadratic(penalty*B.T.dot(B), np.zeros(g.dom.shape))
     
     
-    for l in range(num_iter):
+    for l in range(int(num_iter)):
                 
         # primal update (x)
         x = newton({"f":f+p_x}, x_0=x, tol=1e-5)
@@ -737,7 +737,7 @@ def admm(problem, penalty, rel=1, w_0=0, num_iter=100, tol=None):
     p_y = costs.Quadratic(penalty*B.T.dot(B), np.zeros(g.dom.shape))
     
     
-    for l in range(num_iter):
+    for l in range(int(num_iter)):
                 
         # primal update (x)
         x = newton({"f":f+p_x}, x_0=x, tol=1e-5)

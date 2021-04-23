@@ -60,7 +60,7 @@ class Cost():
         it is :math:`0` if the cost is continuous, :math:`1` if the cost
         is differentiable, *etc*. By convention it is :math:`-1` if the cost
         is discontinuous.
-    prox_solver : str or None
+    _prox_solver : str or None
         This attribute specifies the method (gradient or Newton) that should be
         used to compute the proximal
         
@@ -95,7 +95,7 @@ class Cost():
         self.dom, self.time = dom, time
         self.is_dynamic = time is not None
         self.smooth = -1
-        self.prox_solver = prox_solver # proximal solver method
+        self._prox_solver = prox_solver # proximal solver method
     
     def function(self, x, *args, **kwargs):
         """
@@ -175,7 +175,7 @@ class Cost():
         if self.is_dynamic:
             return self.sample(args[0]).proximal(x, penalty=penalty, **kwargs)
         else:
-            if "solver" not in kwargs: kwargs["solver"] = self.prox_solver
+            if "solver" not in kwargs: kwargs["solver"] = self._prox_solver
             return compute_proximal(self, x, penalty, **kwargs)
     
     def time_derivative(self, x, t, der="tx", **kwargs):
@@ -884,9 +884,9 @@ class SampledCost(Cost):
         """
         Auxiliary method for cost evaluation.
         
-        An evaluation of the sampled cost's `function`, `gradient`, or 
-        `hessian`. Notice that the method does not require positional arguments
-        after `x` since the cost is static.
+        An evaluation of the sampled cost's `function`, `gradient`, 
+        `hessian` or `proximal`. Notice that the method does not require 
+        positional arguments after `x` since the cost is static.
 
         Parameters
         ----------
@@ -908,13 +908,7 @@ class SampledCost(Cost):
     function = partialmethod(_evaluate, "function")
     gradient = partialmethod(_evaluate, "gradient")
     hessian = partialmethod(_evaluate, "hessian")
-    
-    def proximal(self, x, penalty=1, **kwargs):
-        """
-        An evaluation of the cost's proximal.
-        """
-        
-        return super().proximal(x, penalty=penalty, **kwargs)
+    proximal = partialmethod(_evaluate, "proximal")
 
 
 #%% EXAMPLES: STATIC
@@ -1554,7 +1548,7 @@ def compute_proximal(f, x, penalty, solver=None, **kwargs):
     """
     
     # generate cost of the proximal problem
-    problem = {"f":f + Quadratic(np.eye(f.dom.size)/penalty, -x/penalty, utils.square_norm(x)/(2*penalty))}
+    problem = {"f":f + Quadratic(np.eye(f.dom.size)/penalty, -x/penalty)}
     
     if solver is None and f.smooth >= 2: solver = "newton"
     
