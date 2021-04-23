@@ -7,6 +7,7 @@ Cost prediction tools.
 
 import numpy as np
 import scipy as sp
+from collections import deque
 
 
 from tvopt import costs
@@ -94,17 +95,22 @@ class ExtrapolationPrediction(Prediction):
         super().__init__(cost)
         self.smooth = 2
         
-        # extrapolation data
-        self.order, self.range = order, list(range(1, order+1))
-        self.coeffs = {i : (-1)**(i-1) * sp.special.comb(self.order, i) for i in self.range}
+        # extrapolation order and coefficients
+        self.order = int(order)
+        self.coeffs = [(-1)**(i) * sp.special.comb(self.order, i+1) for i in range(self.order)]
+        
+        # queue storing the past sampled costs (the leftmost cost is the most recent)
+        self.past_costs = deque(maxlen=self.order)
     
     def update(self, t):
         
         # update if the t_k is different from the last used
         if self.t_k != t:
             
-            if t < self.order*self.t_s: self.prediction = self.cost.sample(t)
-            else: self.prediction = sum([self.coeffs[i]*self.cost.sample(t-(i-1)*self.t_s) for i in self.range])
+            self.past_costs.appendleft(self.cost.sample(t))
+            
+            if t < self.order*self.t_s: self.prediction = self.past_costs[0]
+            else: self.prediction = sum([coeff*cost for coeff, cost in zip(self.coeffs, self.past_costs)])
             
             self.t_k = t
 
