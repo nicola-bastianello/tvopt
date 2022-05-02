@@ -364,7 +364,7 @@ class Ball(Set):
         
         x = self.check_input(x)
         
-        return abs(utils.norm(x - self.center) - self.radius) <= _eps
+        return utils.norm(x - self.center) <= self.radius + _eps
     
     def projection(self, x):
         
@@ -396,9 +396,9 @@ class Box(Set):
         Parameters
         ----------
         l : array_like
-            Scalar or vector lower bound.
+            Scalar or vector lower bound (same dimension as `u`).
         u : array_like
-            Scalar or vector upper bound.
+            Scalar or vector upper bound (same dimension as `l`).
         n : int, optional
             The dimension of the underlying space that needs to specified if
             scalar lower and upper bounds are used. Defaults to 1.
@@ -408,20 +408,18 @@ class Box(Set):
         ValueError.
         """
         
-        super().__init__(n, 1)
+        super().__init__(max(np.size(l), n), 1)
         
-        # check lower bounds
-        if np.isscalar(l): l = l*np.ones(self.shape)
-        else: l = np.reshape(l, self.shape)
+        # lower bounds
+        self.l = np.reshape(l, self.shape)
         # check upper bounds
-        if np.isscalar(u): u = u*np.ones(self.shape)
-        else: u = np.reshape(u, self.shape)
-
-        if np.any(l > u):
+        try:
+            self.u = np.reshape(u, self.shape)
+        except ValueError:
+            raise ValueError("`l` and `u` must have the same size.")
+        
+        if np.any(self.l > self.u):
             raise ValueError("`l` must be component-wise smaller than `u`.")
-            
-        # store arguments
-        self.l, self.u = l, u
     
     def contains(self, x):
         
@@ -508,7 +506,7 @@ class Halfspace(Set):
     
     This class implements:
         
-        .. math:: \{ x \in \mathbb{R}^n \ | \ \langle a, x \rangle = b \}
+        .. math:: \{ x \in \mathbb{R}^n \ | \ \langle a, x \rangle \leq b \}
     
     for given vetor :math:`a \in \mathbb{R}^{n}` and scalar
     :math:`b \in \mathbb{R}`.
@@ -549,7 +547,7 @@ class Halfspace(Set):
         
         x = self.check_input(x)
         
-        return (self.a.T.dot(x) - self.b).item() <= _eps
+        return self.a.T.dot(x) <= self.b + _eps
     
     def projection(self, x):
         
@@ -658,7 +656,7 @@ class T(Set):
         if t not in self:
             raise ValueError("`t` is out of bounds.")
         
-        return int((t - self.t_min) / self.t_s)
+        return round((t - self.t_min) / self.t_s)
 
     def contains(self, t):
         
