@@ -411,10 +411,10 @@ class Box(Set):
         super().__init__(max(np.size(l), n), 1)
         
         # lower bounds
-        self.l = np.reshape(l, self.shape)
+        self.l = l*np.ones(self.shape) if np.isscalar(l) else np.reshape(l, self.shape)
         # check upper bounds
         try:
-            self.u = np.reshape(u, self.shape)
+            self.u = u*np.ones(self.shape) if np.isscalar(u) else np.reshape(u, self.shape)
         except ValueError:
             raise ValueError("`l` and `u` must have the same size.")
         
