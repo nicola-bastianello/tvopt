@@ -349,18 +349,19 @@ def dist(s, r, ord=2):
 
     Returns
     -------
-    TYPE
-        DESCRIPTION.
-
+    ndarray
+        The distance of the signal from the reference as an array with length
+        equal to the last dimension of `s`.
     """
     
     if isinstance(s, list): s = np.stack(s, axis=-1)
     if isinstance(r, list): r = np.stack(r, axis=-1)
+        
     
-    # repeat x_opt if it is a static quantity
-    if r.shape == s.shape[:-1]:
+    # repeat r to match shape of s
+    if r.shape == s.shape[:-1]: # r has no time dimension
         r = np.repeat(r[...,np.newaxis], s.shape[-1], axis=-1)
-    if s.ndim == 2 and r.shape[0] == s.shape[0] and r.shape[0] != s.shape[0]:
+    elif r.shape[:-1] == s.shape[:-1] and r.shape[-1] == 1: # r has a time dimention equal to 1
         r = np.repeat(r, s.shape[-1], axis=-1)
     
     # compute the norm if the shapes are compatible
@@ -371,7 +372,7 @@ def dist(s, r, ord=2):
         else:
             d = np.zeros(s.shape[-1])
             for l in range(s.shape[-1]):
-                d[l] = la.norm((s[...,l] - r[...,l]).flatten(), ord=ord)
+                d[l] = la.norm(s[...,l] - r[...,l], ord=ord)
             return d
     else:
         raise ValueError("Incompatible shapes of `s` and `r` {}, {}.".format(s.shape, r.shape))

@@ -1217,7 +1217,7 @@ class Indicator(Cost):
         
         return self.dom.projection(x, **kwargs)
     
-    def proximal(self, x, *args, penalty=None, **kwargs):
+    def proximal(self, x, *args, penalty=1, **kwargs):
         
         return self.dom.projection(x, **kwargs)
     
