@@ -24,12 +24,13 @@ pip install tvopt
 ## Cite
 
 ```
-@article{bastianello_tvopt_2020,
+@inproceedings{bastianello_tvopt_2021,
 	title = {tvopt: {A} {Python} {Framework} for {Time}-{Varying} {Optimization}},
-	url = {http://arxiv.org/abs/2011.07119},
-	journal = {arXiv:2011.07119 [cs, math]},
+	doi = {10.1109/CDC45484.2021.9683695},
+	booktitle = {2021 60th {IEEE} {Conference} on {Decision} and {Control} ({CDC})},
 	author = {Bastianello, Nicola},
-	year = {2020}
+	year = {2021},
+	pages = {227--232},
 }
 
 ```
