@@ -8,7 +8,8 @@ Cost template definition and examples.
 import math
 import numpy as np
 from numpy import linalg as la
-from scipy.special import binom
+from scipy.special import binom, logsumexp, expit
+
 from functools import partial, partialmethod
 
 from tvopt import solvers, sets, utils
@@ -1033,20 +1034,22 @@ class Logistic(Cost):
         self.smooth = 2
     
     def function(self, x):
-
-        return math.log(1 + math.exp(float(x)))
+        
+        # numerically stable computation of log(1 + exp(x))
+        return logsumexp([0, x.item()])
     
     def gradient(self, x):
         
-        x = float(x)
-        
-        return math.exp(x) / (1 + math.exp(x))
+        # numerically stable computation of exp(x) / (1 + exp(x))
+        return expit(x.item())
     
     def hessian(self, x):
         
-        x = float(x)
-        
-        return math.exp(x) / (1 + math.exp(x))**2
+        # numerically stable computation of exp(x) / (1 + exp(x))**2
+        # using the gradient g=exp(x) / (1 + exp(x)), we can rewrite
+        # exp(x) / (1 + exp(x))**2 = g * (1 - g)
+        g = self.gradient(x)
+        return g * (1 - g)
 
 
 # -------- NORMS
@@ -1111,38 +1114,7 @@ class Norm_2(Cost):
     
     def __new__(cls, n=1, weight=1):
         
-        if n == 1: return Quadratic_1D(2*weight, 0)
-        else: return object.__new__(cls)
-        
-    def __init__(self, n=1, weight=1):
-        r"""
-        Constructor of the cost.
-        
-        Parameters
-        ----------
-        n : int
-            Size of the unknown :math:`x`.
-        weight : float, optional
-            A weight multiplying the norm. Defaults to :math:`1`.
-        """
-        
-        # check arguments validity
-        super().__init__(sets.R(n, 1))
-        
-        self.weight = weight
-        self.smooth = 2
-    
-    def function(self, x):
-                
-        return self.weight*utils.square_norm(self.dom.check_input(x))
-    
-    def gradient(self, x):
-                
-        return self.weight*self.dom.check_input(x)
-    
-    def proximal(self, x, penalty=1):
-        
-        return self.dom.check_input(x) / (2*self.weight*penalty + 1)
+        return Quadratic(2*weight*np.eye(n), np.zeros(n))
 
 class Norm_inf(Cost):
     r"""
@@ -1242,33 +1214,7 @@ class Linear(Cost):
     
     def __new__(cls, b, c=0):
         
-        if np.size(b) == 1: return Quadratic_1D(0, b, c)
-        else: return object.__new__(cls)
-    
-    def __init__(self, b, c=0):
-        
-        b = np.reshape(b, (-1,1))
-        super().__init__(sets.R(b.shape[0], 1))
-        c = np.array(c).item()
-        
-        self.b, self.c = b, c
-        self.smooth = 2
-    
-    def function(self, x):
-
-        return np.array(self.b.T.dot(self.dom.check_input(x)) + self.c).item()
-    
-    def gradient(self, x=None): # x argument is only for compatibility
-        
-        return self.b
-    
-    def hessian(self, x=None): # x argument is only for compatibility
-        
-        return np.zeros((self.dom.size, self.dom.size))
-    
-    def proximal(self, x, penalty=1):
-        
-        return self.dom.check_input(x) - penalty*self.b
+        return Quadratic(np.zeros((b.size,b.size)), b)
 
 class Quadratic(Cost):
     r"""
@@ -1307,10 +1253,8 @@ class Quadratic(Cost):
         return np.array(0.5*x.T.dot(self.A.dot(x)) + self.b.T.dot(x) + self.c).item()
     
     def gradient(self, x):
-        
-        x = self.dom.check_input(x)
-        
-        return self.A.dot(x) + self.b
+
+        return self.A.dot(self.dom.check_input(x)) + self.b
     
     def hessian(self, x=None): # x argument is only for compatibility
         
@@ -1318,10 +1262,7 @@ class Quadratic(Cost):
     
     def proximal(self, x, penalty=1):
         
-        x = self.dom.check_input(x)
-        
-        if self.dom.size == 1: return (x - penalty*self.b) / (1 + penalty*self.A)
-        else: return la.solve(np.eye(self.dom.size) + penalty*self.A, x - penalty*self.b)
+        return la.solve(np.eye(self.dom.size) + penalty*self.A, self.dom.check_input(x) - penalty*self.b)
 
 class Huber(Cost):
     r"""
@@ -1458,19 +1399,35 @@ class LogisticRegression(Cost):
     """
     Cost for logistic regression.
     
-    TODO
+    The cost is defined as
+    
+        .. math:: f(\pmb{x}) = \sum_{i = 1}^m \log\left( 1 + \exp\left( - b_i \langle \pmb{a}_i, \pmb{x} \rangle + x_0 \right) \right)
+        
+    where :math:`b_i \in \{ -1, 1 \}`, :math:`\pmb{a}_i` are classifier and 
+    feature vector, and :math:`x_0` is the intercept. An optional 
+    :math:`\ell_2` regularization can be added defining its weight `penalty`.
     """
     
-    def __init__(self, A, b):
+    def __init__(self, A, b, penalty=0):
         # each row in A and element of b represent a data point
         
         # domain dim. and num. data points
-        super().__init__(sets.R(A.shape[1], 1))
+        super().__init__(sets.R(A.shape[1]+1, 1))
         self.m = A.shape[0]
         
-        self.A, self.b = A, b
+        # check if binary classification, and map classes to {-1,1}
+        _c = np.unique(b)
+        if len(_c) != 2:
+            raise ValueError(f"Input data for a binary classification task, not for {len(_c)} classes.")
+        b[np.where(b == _c[0])] = -1
+        b[np.where(b == _c[1])] = 1
+        self.b = b.reshape((-1,1))
         
-        self._logistic = Logistic() # scalar logistic function
+        # add column of 1 for the intercept
+        self.A = np.hstack((np.ones((self.m,1)), A))
+        
+        self._p = Norm_2(self.dom.size, penalty)
+        self._lg = Logistic() # scalar logistic function
         self.smooth = 2
     
     def function(self, x):
@@ -1478,21 +1435,21 @@ class LogisticRegression(Cost):
         x = self.dom.check_input(x)
         y = - np.multiply(self.A.dot(x), self.b)
         
-        return sum([self._logistic.function(y[d]) for d in range(self.m)])
+        return sum([self._lg.function(y[d]) for d in range(self.m)]) + self._p.function(x)
     
     def gradient(self, x):
         
         x = self.dom.check_input(x)
         y = - np.multiply(self.A.dot(x), self.b)
         
-        return sum([self._logistic.gradient(y[d]) * (-self.b[d]*self.A[[d],].T) for d in range(self.m)])
+        return -sum([self._lg.gradient(y[d]) * self.b[d]*self.A[[d],].T for d in range(self.m)]) + self._p.gradient(x)
     
     def hessian(self, x):
         
         x = self.dom.check_input(x)
         y = - np.multiply(self.A.dot(x), self.b)
         
-        return sum([self._logistic.hessian(y[d]) * self.A[[d],].T.dot(self.A[[d],]) for d in range(self.m)])
+        return sum([self._lg.hessian(y[d]) * self.A[[d],].T.dot(self.A[[d],]) for d in range(self.m)]) + self._p.hessian(x)
 
 
 #%% EXAMPLES: DYNAMIC
