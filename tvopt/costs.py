@@ -1036,20 +1036,39 @@ class Logistic(Cost):
     def function(self, x):
         
         # numerically stable computation of log(1 + exp(x))
-        return logsumexp([0, x.item()])
+        return logsumexp([0, float(x)])
     
     def gradient(self, x):
         
         # numerically stable computation of exp(x) / (1 + exp(x))
-        return expit(x.item())
+        return expit(float(x))
     
     def hessian(self, x):
         
         # numerically stable computation of exp(x) / (1 + exp(x))**2
         # using the gradient g=exp(x) / (1 + exp(x)), we can rewrite
         # exp(x) / (1 + exp(x))**2 = g * (1 - g)
-        g = self.gradient(x)
+        g = self.gradient(float(x))
         return g * (1 - g)
+    
+    def proximal(self, x, penalty=1, max_iter=50, tol=1e-8):
+        # compute with Newton's method
+        # y is close enough to the optimal solution and seems to always lead
+        # to convergence; indeed the more y is negative, the more the prox
+        # is close to y
+        
+        y = x
+        
+        for _ in range(max_iter):
+            
+            g = self.gradient(y)
+            
+            y_old = y
+            y = y - (g + (y - x)/penalty) / (g*(1-g) + 1/penalty)
+            
+            if abs(y - y_old) / (1e-20 + abs(y_old)) < tol: break
+        
+        return y
 
 
 # -------- NORMS
@@ -1396,7 +1415,7 @@ class RobustLinearRegression(Cost):
         return h
 
 class LogisticRegression(Cost):
-    """
+    r"""
     Cost for logistic regression.
     
     The cost is defined as
@@ -1408,49 +1427,71 @@ class LogisticRegression(Cost):
     :math:`\ell_2` regularization can be added defining its weight `penalty`.
     """
     
-    def __init__(self, A, b, penalty=0):
+    def __init__(self, A, b, weight=0):
         # each row in A and element of b represent a data point
+        # the regularization is w norm / 2
         
-        # domain dim. and num. data points
+        # domain and num. data points
         super().__init__(sets.R(A.shape[1]+1, 1))
+        self.smooth = 2
         self.m = A.shape[0]
         
         # check if binary classification, and map classes to {-1,1}
         _c = np.unique(b)
-        if len(_c) != 2:
-            raise ValueError(f"Input data for a binary classification task, not for {len(_c)} classes.")
-        b[np.where(b == _c[0])] = -1
-        b[np.where(b == _c[1])] = 1
+        if len(_c) != 2: raise ValueError(f"Input data for a binary classification task, not for {len(_c)} classes.")
+        b[np.where(b == _c[0])], b[np.where(b == _c[1])] = -1, 1
         self.b = b.reshape((-1,1))
         
         # add column of 1 for the intercept
         self.A = np.hstack((np.ones((self.m,1)), A))
         
-        self._p = Norm_2(self.dom.size, penalty)
-        self._lg = Logistic() # scalar logistic function
-        self.smooth = 2
+        # regularization weight
+        self.weight = weight
+        
+        # pre-compute useful matrices
+        self._I = np.eye(self.dom.size)
+        self._Ab = -np.multiply(self.A, self.b)
+        self._O = [self.A[[d],].T.dot(self.A[[d],]) for d in range(self.m)]
+        
+        # smoothness and strong convexity moduli
+        self._mod_smth = np.max(la.eigvalsh(sum(self._O)))/4+self.weight
+        self._mod_scvx = self.weight
+        
+        # logistic loss
+        self._lg = Logistic()
+
     
     def function(self, x):
         
-        x = self.dom.check_input(x)
-        y = - np.multiply(self.A.dot(x), self.b)
+        y = self._Ab.dot(x)
         
-        return sum([self._lg.function(y[d]) for d in range(self.m)]) + self._p.function(x)
+        return sum([self._lg.function(y[d]) for d in range(self.m)])+ (self.weight/2) * x.T.dot(x)
     
     def gradient(self, x):
         
-        x = self.dom.check_input(x)
-        y = - np.multiply(self.A.dot(x), self.b)
+        y = self._Ab.dot(x)
         
-        return -sum([self._lg.gradient(y[d]) * self.b[d]*self.A[[d],].T for d in range(self.m)]) + self._p.gradient(x)
+        return sum([self._lg.gradient(y[d]) * self._Ab[[d],].T for d in range(self.m)]) + self.weight*x
     
     def hessian(self, x):
         
-        x = self.dom.check_input(x)
-        y = - np.multiply(self.A.dot(x), self.b)
+        y = self._Ab.dot(x)
         
-        return sum([self._lg.hessian(y[d]) * self.A[[d],].T.dot(self.A[[d],]) for d in range(self.m)]) + self._p.hessian(x)
-
+        return sum([self._lg.hessian(y[d]) * self._O[d] for d in range(self.m)]) + self.weight*self._I
+    
+    def proximal(self, x, penalty=1, tol=1e-5, max_iter=100):
+        
+        step = 2 / (self._mod_smth+self._mod_scvx+2/penalty) # optimal step-size
+                
+        w = x
+        for _ in range(int(max_iter)):
+            
+            w_old = w
+            w = w - step*(self.gradient(w) + (w - x) / penalty)
+            
+            if la.norm(w - w_old) / (1e-20 + la.norm(w_old)) < tol: break
+        
+        return w
 
 #%% EXAMPLES: DYNAMIC
 
