@@ -18,11 +18,11 @@ sys.path.insert(0, os.path.abspath('..'))
 # -- Project information -----------------------------------------------------
 
 project = 'tvopt'
-copyright = '2021, Nicola Bastianello'
+copyright = '2023, Nicola Bastianello'
 author = 'Nicola Bastianello'
 
 # The full version, including alpha/beta/rc tags
-release = '0.2.1'
+release = '0.2.7'
 
 
 # -- General configuration ---------------------------------------------------

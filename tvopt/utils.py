@@ -372,7 +372,7 @@ def dist(s, r, ord=2):
         else:
             d = np.zeros(s.shape[-1])
             for l in range(s.shape[-1]):
-                d[l] = la.norm(s[...,l] - r[...,l], ord=ord)
+                d[l] = la.norm((s[...,l] - r[...,l]).flatten(), ord=ord)
             return d
     else:
         raise ValueError("Incompatible shapes of `s` and `r` {}, {}.".format(s.shape, r.shape))
