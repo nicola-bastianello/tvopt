@@ -742,7 +742,7 @@ def dual_ascent(problem, step, w_0=0, num_iter=100):
     
     return x, w
 
-def admm(problem, penalty, rel, w_0=0, num_iter=100):
+def admm(problem, penalty, rel, z_0=None, num_iter=100):
     r"""
     Distributed relaxed alternating direction method of multipliers (ADMM).
     
@@ -771,11 +771,9 @@ def admm(problem, penalty, rel, w_0=0, num_iter=100):
     rel : float
         The relaxation parameter :math:`\alpha` of the algorithm (convergence 
         is guaranteed for values in :math:`(0,1)`).
-    w_0 : ndarray, optional
-        The initial value of the dual nodes' states. This can be either an
-        ndarray of suitable size with the last dimension indexing the nodes, or
-        a scalar. If it is a scalar then the same initial value is used for
-        all components.
+    z_0 : ndarray, optional
+        The initial value of the edge variables. It is a dictionary which maps
+        from edge to the corresponding variable.
     num_iter : int, optional
         The number of iterations to be performed.
 
@@ -783,8 +781,8 @@ def admm(problem, penalty, rel, w_0=0, num_iter=100):
     -------
     x : ndarray
         The nodes' states after `num_iter` iterations.
-    w : ndarray
-        The dual variables of the nodes after `num_iter` iterations.
+    z : dictionary
+        The edge variables after `num_iter` iterations.
     
     References
     ----------
@@ -806,9 +804,11 @@ def admm(problem, penalty, rel, w_0=0, num_iter=100):
     z = {}
     for i in range(net.N):
         for j in net.neighbors[i]:
-            z[i,j] = np.zeros(f.dom.shape[:-1])
-    
-    
+            if z_0 is None:
+                z[i,j] = np.zeros(f.dom.shape[:-1])
+            else:
+                z[i, j] = z_0[i, j]
+
     for l in range(int(num_iter)):
         
         for i in range(net.N):
