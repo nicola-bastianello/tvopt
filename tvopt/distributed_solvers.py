@@ -782,7 +782,7 @@ def admm(problem, penalty, rel, z_0=None, num_iter=100):
     x : ndarray
         The nodes' states after `num_iter` iterations.
     z : ndarray
-        The dual variables of the nodes after `num_iter` iterations.
+        The edge variables after `num_iter` iterations.
     
     References
     ----------
